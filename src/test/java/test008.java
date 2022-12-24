@@ -14,6 +14,7 @@ public class test008 {
         ResponseBody body = res.body();
         String rbdy = body.asString();
         System.out.println("Data from the GET API - " + rbdy);
+
     }
 
 }
