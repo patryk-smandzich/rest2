@@ -9,28 +9,36 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class test007 {
-@Test
+    @Test
     public void deserialization() {
 
-    RestAssured.baseURI = "https://reqres.in/";
+        RestAssured.baseURI = "https://reqres.in/";
 
-    RequestSpecification httpRequest = RestAssured.given();
+        RequestSpecification httpRequest = RestAssured.given();
 
-    JSONObject requestParams = new JSONObject();
-    requestParams.put("name", "Patrick");
-    requestParams.put("job", "Tester");
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("name", "Patrick");
+        requestParams.put("job", "Tester");
 
-    httpRequest.header("Content-Type", "application/json");
-    httpRequest.body(requestParams.toJSONString());
+        httpRequest.header("Content-Type", "application/json");
+        httpRequest.body(requestParams.toJSONString());
 
-    Response response = httpRequest.post("/api/users");
-    System.out.println(response.asString());
-    ResponseBody body = response.getBody();
+        Response response = httpRequest.post("/api/users");
+        System.out.println(response.asString());
+        ResponseBody body = response.getBody();
 
-    JSONSuccessResponse responseBody = body.as(JSONSuccessResponse.class);
+        if (response.statusCode() == 200) {
 
-    Assert.assertEquals("Patrick", responseBody.name);
-    Assert.assertEquals("Tester", responseBody.job);
+            JSONSuccessResponse responseBody = body.as(JSONSuccessResponse.class);
+
+            Assert.assertEquals("Patrick", responseBody.name);
+            Assert.assertEquals("Tester", responseBody.job);
+
+        } else {
+
+            JSONFailedResponse responseBody = body.as(JSONFailedResponse.class);
+            Assert.assertEquals("Missing password", responseBody.error);
+        }
 
     }
 }
