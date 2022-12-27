@@ -1,26 +1,24 @@
+package test010;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 public class test010 {
     @Test
-    public void jsonArray(){
+    public void jsonArray() {
 
 
         RestAssured.baseURI = "https://bookstore.demoqa.com/BookStore/v1/Books";
         RequestSpecification httpRequest = RestAssured.given();
         Response response = httpRequest.get();
 
-        JsonPath json = response.jsonPath();
+        Book[] books = response.jsonPath().getObject("books", Book[].class);
 
-        List<String> allBooks = json.getList("books.title");
-
-        for (String book: allBooks){
-            System.out.println("Book title: " + book);
+        for (Book book: books){
+            System.out.println("Book title: " + book.title + ", author: " + book.author);
         }
 
     }
